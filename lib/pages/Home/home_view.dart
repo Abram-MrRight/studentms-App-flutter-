@@ -1,78 +1,116 @@
-// lib/views/home_view.dart
-import 'dart:ffi';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:studentms_app/api/api_repository.dart';
+import 'package:studentms_app/pages/Home/home_controller.dart';
 import 'package:studentms_app/pages/studentsList/students_screen.dart';
 
 class HomeView extends StatelessWidget {
+  final HomeController controller = Get.put(HomeController(apiRepository: Get.find<ApiRepository>()));
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home Screen'),
-      ),
-      body:  Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-           Card(
-            elevation: 14,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)
-            ),
-            child: const ListTile(
-              title: Text("Expected Aount"),
-              subtitle: Text('500,000'),
-            ),
-          ),// Add more widgets as needed
-          SizedBox(height: 10,),
-           Card(
-            elevation: 14,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)
-            ),
-            child:const ListTile(
-              title: Text("Total Collected"),
-              subtitle: Text('30,000'),
-            ) ,
+        title: Center(
+          child: Text(
+            'Student Finances',
+            textAlign: TextAlign.center,
           ),
-          SizedBox(height: 10,),
-          Card(
-            elevation: 14,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)
-            ),
-            child:ListTile(
-              title: Text("Outstanding Balances"),
-              subtitle: Text('20,000'),
-            ) ,
-          ),
-          SizedBox(height: 10,),
-          Card(
-            elevation: 14,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)
-            ),
-            child:const ListTile(
-              title: Text("Percentage Collected"),
-              subtitle: Text('60%'),
-            ) ,
-          ),
-          const SizedBox(height: 30,),
-          ElevatedButton(
-            onPressed: (){
-              Get.to(()=> StudentsScreen());
+        ),
+        centerTitle: true,
+        elevation: 12,
+        backgroundColor: Color.fromARGB(255, 158, 146, 240),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: () {
+              // Implement refresh functionality here
             },
-            child: Text('Students'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-              textStyle: TextStyle(fontSize: 18, color: Colors.white),
-            ),
           ),
         ],
+      ),
+      body: Obx(() {
+        if (controller.studentsResponse.value == null) {
+          return Center(child: CircularProgressIndicator());
+        }
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              SizedBox(height: 60), // Add space at the top
+              _buildCard(
+                title: 'Expected Amount',
+                value: '${controller.totalExpectedFees}',
+              ),
+              SizedBox(height: 10),
+              _buildCard(
+                title: 'Total Collected',
+                value: '${controller.totalPayments}',
+              ),
+              SizedBox(height: 10),
+              _buildCard(
+                title: 'Outstanding Balances',
+                value: '${controller.totalOutstandingBalances}',
+              ),
+              SizedBox(height: 10),
+              _buildCard(
+                title: 'Percentage Collected',
+                value: controller.percentageCollected,
+              ),
+              SizedBox(height: 50),
+              ElevatedButton(
+                onPressed: () {
+                  Get.to(() => StudentsScreen());
+                },
+                child: Text('Students'),
+                style: ElevatedButton.styleFrom(
+                 backgroundColor: Color.fromARGB(255, 158, 146, 240),
+                  padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 20),
+                  textStyle: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget _buildCard({required String title, required String value}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: SizedBox(
+        width: double.infinity,
+        child: Card(
+          elevation: 14,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blue,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
