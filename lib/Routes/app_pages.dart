@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:studentms_app/pages/Home/home_binding.dart';
 import '../pages/Home/home_view.dart';
 import '../pages/Home/home.dart';
+import '../pages/studentsList/edit_student_screen.dart';
+import '../pages/studentsList/student_details_screen.dart';
 import '../pages/studentsList/students_binding.dart';
 import '../pages/studentsList/students_screen.dart';
 part 'app_routes.dart';
@@ -16,13 +18,10 @@ class AppPages{
 
   GetPage(
      name: Routes.STUDENTS,
-      page: () => StudentsScreen(),
+      page: () => const StudentsListView(),
      binding: StudentsBinding()
   ),
-
-  // GetPage(
-  // name: PAGE2, page: () => SecondPage()),
-  // )
-
+    GetPage(name: Routes.STUDENT_DETAILS, page: () => StudentDetailsScreen()),
+    GetPage(name: Routes.EDIT_STUDENT, page: () => EditStudentScreen())
   ];
 }

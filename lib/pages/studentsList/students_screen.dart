@@ -1,34 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'add_student.dart';
-import 'students_controller.dart';
-
-class StudentsScreen extends StatelessWidget {
-  final StudentsController controller = Get.put(StudentsController());
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Students List'),
-      ),
-      body: GestureDetector(
-        onTap: (){
-          print("Hello student");
-        },
-          child: StudentsListView()),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.green,
-        onPressed: () {
-          Get.to(() => AddStudentScreen());
-        },
-        child: Icon(Icons.add),
-      ),
-    );
-  }
-}
+import 'package:studentms_app/api/api.dart';
+import 'package:studentms_app/pages/studentsList/students_controller.dart';
 
 class StudentsListView extends StatefulWidget {
+  const StudentsListView({super.key});
+
   @override
   _StudentsListViewState createState() => _StudentsListViewState();
 }
@@ -38,10 +15,23 @@ class _StudentsListViewState extends State<StudentsListView> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<StudentsController>(
-      builder: (controller) {
+    final controller = Get.put(StudentsController(apiRepository: Get.find<ApiRepository>()));
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Students List'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              // search logic
+            },
+          ),
+        ],
+      ),
+      body: Obx(() {
         if (controller.students.isEmpty) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         final students = showAll ? controller.students : controller.students.take(6).toList();
@@ -56,30 +46,33 @@ class _StudentsListViewState extends State<StudentsListView> {
                   itemBuilder: (context, index) {
                     return Card(
                       elevation: 5,
-                      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: ListTile(
-                        contentPadding: EdgeInsets.all(15),
+                        contentPadding: const EdgeInsets.all(15),
                         title: Text(
                           students[index].name,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         subtitle: Text(
-                          'ID: ${students[index].id}',
+                          'Class: ${students[index].studentClass}',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[600],
                           ),
                         ),
-                        trailing: Icon(
+                        trailing: const Icon(
                           Icons.arrow_forward_ios,
                           color: Colors.blue,
                         ),
+                        onTap: () {
+                          Get.toNamed('/student-details', arguments: students[index]);
+                        },
                       ),
                     );
                   },
@@ -92,7 +85,7 @@ class _StudentsListViewState extends State<StudentsListView> {
                       showAll = true;
                     });
                   },
-                  child: Text(
+                  child: const Text(
                     'Show More',
                     style: TextStyle(
                       fontSize: 16,
@@ -100,11 +93,11 @@ class _StudentsListViewState extends State<StudentsListView> {
                     ),
                   ),
                 ),
-              SizedBox(height: 40,)
+              const SizedBox(height: 40,)
             ],
           ),
         );
-      },
+      }),
     );
   }
 }
