@@ -14,7 +14,6 @@ class ApiRepository {
 
   Future<StudentsResponse?> getStudentDetails() async {
     const url = 'http://46.101.198.244:7001/api/students/getstudents';
-    final url = 'http://192.168.102.154:4040/api/students/getstudents';
     logger.i('Url: get $url');
 
     try {

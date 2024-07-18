@@ -1,10 +1,8 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-
 import '../../Models/responses/studentDetails_response.dart';
 import '../../api/api_repository.dart';
-
 class Student {
   final int id;
   final String name;
@@ -16,7 +14,6 @@ class Student {
   final int expectedFees;
   final int paidAmount;
   final int outstandingBalance;
-
   Student({
     required this.id,
     required this.name,
@@ -30,31 +27,19 @@ class Student {
     required this.outstandingBalance,
   });
 }
-
 class StudentsController extends GetxController {
   var students = <Student>[].obs;
   final ApiRepository apiRepository;
   final logger = Logger();
-
   StudentsController({required this.apiRepository});
 
   var studentsResponse = Rxn<StudentsResponse>();
-import '../../api/api_repository.dart';
-import '../../Models/responses/studentDetails_response.dart';
-
-class StudentsController extends GetxController {
-  final ApiRepository apiRepository;
-
-  StudentsController({required this.apiRepository});
-
-  var students = <StudentStatus>[].obs; // Ensure it's an observable list
 
   @override
   void onInit() {
-    super.onInit();
-    fetchStudents();
+  super.onInit();
+  fetchStudents();
   }
-
   void fetchStudents() async {
     EasyLoading.show(status: 'Loading...');
     try {
@@ -85,13 +70,6 @@ class StudentsController extends GetxController {
       EasyLoading.showError('An error occurred: $e');
     } finally {
       EasyLoading.dismiss();
-    try {
-      final studentsResponse = await apiRepository.getStudentDetails();
-      if (studentsResponse != null) {
-        students.assignAll(studentsResponse.studentsStatus);
-      }
-    } catch (e) {
-      print('Error fetching students: $e');
     }
   }
-}
+  }
