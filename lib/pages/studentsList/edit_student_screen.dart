@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:studentms_app/pages/studentsList/students_controller.dart';
 import 'edit_student_controller.dart';
 
+
 class EditStudentScreen extends StatelessWidget {
   final Student student = Get.arguments;
 
@@ -14,61 +15,67 @@ class EditStudentScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Student'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save, color: Colors.blue,),
-            onPressed: () {
-              controller.updateStudent();
-            },
-          ),
-        ],
+        title:  Text('${student.name}', style: const TextStyle(fontSize: 18)),
+
+        backgroundColor: Colors.green,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: controller.nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
-            ),
-            TextField(
-              controller: controller.genderController,
-              decoration: const InputDecoration(labelText: 'Gender'),
-            ),
-            TextField(
-              controller: controller.ageController,
-              decoration: const InputDecoration(labelText: 'Age'),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: controller.studentClassController,
-              decoration: const InputDecoration(labelText: 'Class'),
-            ),
-            TextField(
-              controller: controller.physicalAddressController,
-              decoration: const InputDecoration(labelText: 'Address'),
-            ),
-            TextField(
-              controller: controller.parentPhoneNumberController,
-              decoration: const InputDecoration(labelText: 'Parent Phone'),
-              keyboardType: TextInputType.phone,
-            ),
-            const Spacer(),
-            Align(
-              alignment: Alignment.center,
-              child: ElevatedButton(
-                onPressed: () {
-                  controller.deleteStudent();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 20),
+              _buildTextFieldCard('Name', controller.nameController, TextInputType.text),
+              _buildTextFieldCard('Gender', controller.genderController, TextInputType.text),
+              _buildTextFieldCard('Age', controller.ageController, TextInputType.number),
+              _buildTextFieldCard('Class', controller.studentClassController, TextInputType.text),
+              _buildTextFieldCard('Address', controller.physicalAddressController, TextInputType.text),
+              _buildTextFieldCard('Parent Phone', controller.parentPhoneNumberController, TextInputType.phone),
+              const SizedBox(height: 40),
+              Align(
+                alignment: Alignment.center,
+                child: ElevatedButton(
+                  onPressed: () {
+                    controller.updateStudent();
+                    Future.delayed(Duration(seconds: 1), () { // Delay to ensure snackbar is visible
+                      Get.back(); // Close the screen
+                     // studentsController.refreshStudents(); // Refresh student list
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                    textStyle: const TextStyle(fontSize: 20),
+                  ),
+                  child: Text('Save ${student.name}'),
                 ),
-                child: Text('DELETE ${student.name}', style: const TextStyle(fontSize: 24),),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextFieldCard(String label, TextEditingController controller, TextInputType inputType) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      elevation: 3,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: TextField(
+          controller: controller,
+          keyboardType: inputType,
+          decoration: InputDecoration(
+            labelText: label,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
             ),
-          ],
+          ),
         ),
       ),
     );

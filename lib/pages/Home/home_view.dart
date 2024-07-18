@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:studentms_app/api/api_repository.dart';
+import 'package:studentms_app/drawer/Drawer.dart';
 import 'package:studentms_app/pages/Home/home_controller.dart';
 import 'package:studentms_app/pages/studentsList/students_screen.dart';
-
 import '../../Routes/app_pages.dart';
 
 class HomeView extends StatelessWidget {
@@ -21,7 +21,7 @@ class HomeView extends StatelessWidget {
         ),
         centerTitle: true,
         elevation: 12,
-        backgroundColor: const Color.fromARGB(255, 158, 146, 240),
+        backgroundColor: const Color.fromARGB(217, 104, 228, 98),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -31,6 +31,7 @@ class HomeView extends StatelessWidget {
           ),
         ],
       ),
+      drawer: const BuildDrawer(),
       body: Obx(() {
         if (controller.studentsResponse.value == null) {
           return const Center(child: CircularProgressIndicator());
@@ -60,24 +61,56 @@ class HomeView extends StatelessWidget {
                 value: controller.percentageCollected,
               ),
               const SizedBox(height: 50),
-              ElevatedButton(
-                onPressed: () {
-
-                  Get.to(() => const StudentsListView());
-                  Get.toNamed(Routes.STUDENTS);
-                },
-                style: ElevatedButton.styleFrom(
-                 backgroundColor: const Color.fromARGB(255, 158, 146, 240),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 20),
-                  textStyle: const TextStyle(fontSize: 20, color: Colors.white),
-                ),
-                child: const Text('Students'),
-              ),
             ],
           ),
         );
       }),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.black,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: const Color.fromARGB(217, 104, 228, 98),
+          selectedItemColor: Colors.red,
+          unselectedItemColor: Colors.black,
+          showUnselectedLabels: true,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Students',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.card_membership_sharp),
+              label: 'Payments',
+            ),
+          ],
+          onTap: (index) {
+            switch (index) {
+              case 0:
+                Get.toNamed(Routes.HOME); // Ensure you have defined Routes.HOME
+                break;
+              case 1:
+                Get.toNamed(Routes.STUDENTS);
+                break;
+              case 2:
+                Get.toNamed(Routes.PAYMENT); // Ensure you have defined Routes.SETTINGS
+                break;
+            }
+          },
+        ),
+      ),
     );
   }
 

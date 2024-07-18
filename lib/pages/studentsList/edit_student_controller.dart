@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:studentms_app/Routes/app_pages.dart';
 import 'package:studentms_app/pages/studentsList/students_controller.dart';
+import '../../api/api_repository.dart';
 
 class EditStudentController extends GetxController {
   final Student student;
@@ -37,34 +37,32 @@ class EditStudentController extends GetxController {
     super.onClose();
   }
 
-  void updateStudent() {
-    // Implement the update student logic here
-  }
-
-  void deleteStudent() {
-    Get.dialog(
-      AlertDialog(
-        title: const Text('Delete Student'),
-        content: const Text('Are you sure you want to delete this student?'),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(), // Dismiss the dialog
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Get.back();
-              // delete logic here
-              Get.toNamed(Routes.STUDENTS); // Go back to the previous screen after deletion
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white
-            ),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
+  void updateStudent() async {
+    final updatedStudent = Student(
+      id: student.id,
+      name: nameController.text,
+      gender: genderController.text,
+      age: int.parse(ageController.text),
+      studentClass: studentClassController.text,
+      physicalAddress: physicalAddressController.text,
+      parentPhoneNumber: parentPhoneNumberController.text,
+      expectedFees: student.expectedFees,
+      outstandingBalance: student.outstandingBalance,
+      paidAmount: student.paidAmount,
     );
+
+    try {
+      final apiRepository = Get.find<ApiRepository>();
+      await apiRepository.updateStudent(updatedStudent);
+      // Update the student in the list
+      final studentsController = Get.find<StudentsController>();
+      final index = studentsController.students.indexWhere((s) => s.id == student.id);
+      if (index != -1) {
+        studentsController.students[index] = updatedStudent;
+        Get.snackbar('Success', 'Student updated successfully');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to update student');
+    }
   }
 }

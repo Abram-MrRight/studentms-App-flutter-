@@ -1,10 +1,8 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-
 import '../../Models/responses/studentDetails_response.dart';
 import '../../api/api_repository.dart';
-
 class Student {
   final int id;
   final String name;
@@ -14,9 +12,8 @@ class Student {
   final String physicalAddress;
   final String parentPhoneNumber;
   final int expectedFees;
-  final int paidAmount;
-  final int outstandingBalance;
-
+  final int? paidAmount;
+  final int? outstandingBalance;
   Student({
     required this.id,
     required this.name,
@@ -26,35 +23,25 @@ class Student {
     required this.physicalAddress,
     required this.parentPhoneNumber,
     required this.expectedFees,
-    required this.paidAmount,
-    required this.outstandingBalance,
+     this.paidAmount,
+     this.outstandingBalance,
   });
 }
-
 class StudentsController extends GetxController {
   var students = <Student>[].obs;
   final ApiRepository apiRepository;
   final logger = Logger();
-
   StudentsController({required this.apiRepository});
 
   var studentsResponse = Rxn<StudentsResponse>();
-import '../../api/api_repository.dart';
-import '../../Models/responses/studentDetails_response.dart';
+  var totalStudents = 0.obs;  // Observable for total number of students
 
-class StudentsController extends GetxController {
-  final ApiRepository apiRepository;
-
-  StudentsController({required this.apiRepository});
-
-  var students = <StudentStatus>[].obs; // Ensure it's an observable list
 
   @override
   void onInit() {
-    super.onInit();
-    fetchStudents();
+  super.onInit();
+  fetchStudents();
   }
-
   void fetchStudents() async {
     EasyLoading.show(status: 'Loading...');
     try {
@@ -63,6 +50,7 @@ class StudentsController extends GetxController {
       if (response != null) {
         studentsResponse.value = response;
         students.clear();
+        totalStudents.value = response.numberOfStudents;
         for (var studentStatus in response.studentsStatus) {
           students.add(Student(
             id: studentStatus.studentId,
@@ -85,13 +73,20 @@ class StudentsController extends GetxController {
       EasyLoading.showError('An error occurred: $e');
     } finally {
       EasyLoading.dismiss();
-    try {
-      final studentsResponse = await apiRepository.getStudentDetails();
-      if (studentsResponse != null) {
-        students.assignAll(studentsResponse.studentsStatus);
-      }
-    } catch (e) {
-      print('Error fetching students: $e');
     }
   }
-}
+  Future<void> deleteStudent(int studentId) async {
+    try {
+      await apiRepository.deleteStudent(studentId);
+      students.removeWhere((student) => student.id == studentId);
+      totalStudents.value = students.length;
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to delete student');
+    }
+  }
+
+  void refreshStudents() {
+    fetchStudents();
+  }
+
+  }
