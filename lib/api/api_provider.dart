@@ -1,3 +1,4 @@
+import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:http/http.dart' as http;
 
 class ApiProvider {
@@ -5,5 +6,5 @@ class ApiProvider {
 
   ApiProvider({required this.httpClient});
 
-  // Define your methods for making HTTP requests here
+
 }

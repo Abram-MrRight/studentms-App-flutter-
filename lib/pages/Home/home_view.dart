@@ -13,7 +13,7 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
+        title: const Center(
           child: Text(
             'Student Finances',
             textAlign: TextAlign.center,
@@ -21,10 +21,10 @@ class HomeView extends StatelessWidget {
         ),
         centerTitle: true,
         elevation: 12,
-        backgroundColor: Color.fromARGB(255, 158, 146, 240),
+        backgroundColor: const Color.fromARGB(255, 158, 146, 240),
         actions: [
           IconButton(
-            icon: Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh),
             onPressed: () {
               // Implement refresh functionality here
             },
@@ -33,43 +33,46 @@ class HomeView extends StatelessWidget {
       ),
       body: Obx(() {
         if (controller.studentsResponse.value == null) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              SizedBox(height: 60), // Add space at the top
+              const SizedBox(height: 60), // Add space at the top
               _buildCard(
                 title: 'Expected Amount',
                 value: '${controller.totalExpectedFees}',
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               _buildCard(
                 title: 'Total Collected',
                 value: '${controller.totalPayments}',
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               _buildCard(
                 title: 'Outstanding Balances',
                 value: '${controller.totalOutstandingBalances}',
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               _buildCard(
                 title: 'Percentage Collected',
                 value: controller.percentageCollected,
               ),
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
               ElevatedButton(
                 onPressed: () {
+
+                  Get.to(() => const StudentsListView());
                   Get.toNamed(Routes.STUDENTS);
                 },
-                child: Text('Students'),
                 style: ElevatedButton.styleFrom(
-                 backgroundColor: Color.fromARGB(255, 158, 146, 240),
+                 backgroundColor: const Color.fromARGB(255, 158, 146, 240),
+                  foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 20),
-                  textStyle: TextStyle(fontSize: 20, color: Colors.white),
+                  textStyle: const TextStyle(fontSize: 20, color: Colors.white),
                 ),
+                child: const Text('Students'),
               ),
             ],
           ),
@@ -96,15 +99,15 @@ class HomeView extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   value,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     color: Colors.blue,
                   ),
