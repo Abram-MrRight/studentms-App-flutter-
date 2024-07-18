@@ -4,6 +4,8 @@ import 'package:studentms_app/api/api_repository.dart';
 import 'package:studentms_app/pages/Home/home_controller.dart';
 import 'package:studentms_app/pages/studentsList/students_screen.dart';
 
+import '../../Routes/app_pages.dart';
+
 class HomeView extends StatelessWidget {
   final HomeController controller = Get.put(HomeController(apiRepository: Get.find<ApiRepository>()));
 
@@ -60,7 +62,9 @@ class HomeView extends StatelessWidget {
               const SizedBox(height: 50),
               ElevatedButton(
                 onPressed: () {
+
                   Get.to(() => const StudentsListView());
+                  Get.toNamed(Routes.STUDENTS);
                 },
                 style: ElevatedButton.styleFrom(
                  backgroundColor: const Color.fromARGB(255, 158, 146, 240),
