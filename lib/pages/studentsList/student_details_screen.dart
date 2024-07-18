@@ -48,19 +48,31 @@ class StudentDetailsScreen extends StatelessWidget {
             const SizedBox(height: 8),
             Text('Outstanding Fees: ${student.outstandingBalance}', style: const TextStyle(fontSize: 18)),
             const Spacer(),
-            Align(
-              alignment: Alignment.center,
-              child: ElevatedButton(
-                onPressed: () {
-                  // print bio-data logic
-                  Fluttertoast.showToast(msg: "Printing bio-data", gravity: ToastGravity.CENTER);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    controller.deleteStudent();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: Text('DELETE ${student.name}', style: const TextStyle(fontSize: 16),),
                 ),
-                child: const Text('Print Bio-data', style: TextStyle(fontSize: 24),),
-              ),
+                ElevatedButton(
+                  onPressed: () {
+                    // print bio-data logic
+                    Fluttertoast.showToast(msg: "Printing bio-data", gravity: ToastGravity.CENTER);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Print Bio-data', style: TextStyle(fontSize: 16),),
+                ),
+              ],
             ),
           ],
         ),

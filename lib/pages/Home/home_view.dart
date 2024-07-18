@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:studentms_app/Routes/app_pages.dart';
 import 'package:studentms_app/api/api_repository.dart';
 import 'package:studentms_app/pages/Home/home_controller.dart';
 import 'package:studentms_app/pages/studentsList/students_screen.dart';
@@ -24,10 +25,48 @@ class HomeView extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              // Implement refresh functionality here
+              controller.fetchStudentDetails();
             },
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const UserAccountsDrawerHeader(
+              accountName: Text('John Doe'),
+              accountEmail: Text('john.doe@example.com'),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: AssetImage('assets/images/user.png'),
+              ),
+              decoration: BoxDecoration(
+                color: Color(0xFF9688e5),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.privacy_tip),
+              title: const Text('Privacy Policy'),
+              onTap: () {
+                Get.toNamed(Routes.PRIVACY); // Navigate to Privacy Policy page
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.gavel),
+              title: const Text('Legal Notice'),
+              onTap: () {
+                Get.toNamed(Routes.LEGAL); // Navigate to Legal Notice page
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.description),
+              title: const Text('Terms of Service'),
+              onTap: () {
+                Get.toNamed(Routes.TERMS); // Navigate to Terms of Service page
+              },
+            ),
+          ],
+        ),
       ),
       body: Obx(() {
         if (controller.studentsResponse.value == null) {

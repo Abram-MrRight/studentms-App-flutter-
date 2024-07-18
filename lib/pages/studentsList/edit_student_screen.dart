@@ -53,21 +53,7 @@ class EditStudentScreen extends StatelessWidget {
               controller: controller.parentPhoneNumberController,
               decoration: const InputDecoration(labelText: 'Parent Phone'),
               keyboardType: TextInputType.phone,
-            ),
-            const Spacer(),
-            Align(
-              alignment: Alignment.center,
-              child: ElevatedButton(
-                onPressed: () {
-                  controller.deleteStudent();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                ),
-                child: Text('DELETE ${student.name}', style: const TextStyle(fontSize: 24),),
-              ),
-            ),
+            )
           ],
         ),
       ),

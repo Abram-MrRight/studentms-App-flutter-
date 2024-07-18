@@ -4,6 +4,9 @@ part of 'app_pages.dart';
   static const STUDENTS = '/studentsScreen';
   static const STUDENT_DETAILS = '/student-details';
   static const EDIT_STUDENT = '/edit-student';
+  static const PRIVACY = '/privacy-policy';
+  static const LEGAL = '/legal-notice';
+  static const TERMS = '/terms-of-service';
   // static const PAGE2 = '/page2';
 
 }
