@@ -11,7 +11,7 @@ class ApiRepository {
   ApiRepository({required this.apiProvider});
 
   Future<StudentsResponse?> getStudentDetails() async {
-    final url = 'http://192.168.113.154:7001/api/students/getstudents';
+    final url = 'http://192.168.102.154:4040/api/students/getstudents';
     logger.i('Url: get $url');
     
     try {

@@ -1,14 +1,13 @@
 import 'package:get/get.dart';
-
-class Student {
-  final int id;
-  final String name;
-
-  Student(this.id, this.name);
-}
+import '../../api/api_repository.dart';
+import '../../Models/responses/studentDetails_response.dart';
 
 class StudentsController extends GetxController {
-  var students = <Student>[].obs;
+  final ApiRepository apiRepository;
+
+  StudentsController({required this.apiRepository});
+
+  var students = <StudentStatus>[].obs; // Ensure it's an observable list
 
   @override
   void onInit() {
@@ -16,18 +15,14 @@ class StudentsController extends GetxController {
     fetchStudents();
   }
 
-  void fetchStudents() {
-    // Simulate fetching data from an API or database
-    var fetchedStudents = [
-      Student(1, 'Student 1'),
-      Student(2, 'Student 2'),
-      Student(3, 'Student 3'),
-      Student(4, 'Student 4'),
-      Student(5, 'Student 5'),
-      Student(6, 'Student 6'),
-      Student(7, 'Student 7'),
-      Student(8, 'Student 8'),
-    ];
-    students.addAll(fetchedStudents);
+  void fetchStudents() async {
+    try {
+      final studentsResponse = await apiRepository.getStudentDetails();
+      if (studentsResponse != null) {
+        students.assignAll(studentsResponse.studentsStatus);
+      }
+    } catch (e) {
+      print('Error fetching students: $e');
+    }
   }
 }
