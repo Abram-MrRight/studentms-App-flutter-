@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:studentms_app/api/api_repository.dart';
 import 'package:studentms_app/Models/responses/studentDetails_response.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:logger/logger.dart';
 
 class HomeController extends GetxController {
@@ -11,6 +10,8 @@ class HomeController extends GetxController {
   HomeController({required this.apiRepository});
 
   var studentsResponse = Rxn<StudentsResponse>();
+  final RxBool isLoading = false.obs;
+
   var totalExpectedFees = 0.obs;
   var totalPayments = 0.obs;
   var totalOutstandingBalances = 0.obs;
@@ -22,7 +23,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> fetchStudentDetails() async {
-    EasyLoading.show(status: 'Loading...');
+    isLoading.value = true;
     try {
       var response = await apiRepository.getStudentDetails();
       logger.i('API response: $response');
@@ -30,13 +31,14 @@ class HomeController extends GetxController {
         studentsResponse.value = response;
         calculateTotals();
       } else {
-        EasyLoading.showError('Failed to fetch student details');
+        // Handle the case where the response is null
+        Get.snackbar('Error', 'Failed to fetch student details');
       }
     } catch (e) {
       logger.e('Error fetching student details: $e');
-      EasyLoading.showError('An error occurred: $e');
+      Get.snackbar('Error', 'An error occurred: $e');
     } finally {
-      EasyLoading.dismiss();
+      isLoading.value = false;
     }
   }
 

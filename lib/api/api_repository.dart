@@ -132,7 +132,58 @@ class ApiRepository {
       throw Exception('Failed to add payment');
     }
   }
+  Future<Map<String, dynamic>> loginUser(String email, String password) async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://46.101.198.244:4040/api/students/login'),
+        body: json.encode({
+          'email': email,
+          'password': password,
+        }),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      // Print response status and body
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body); // Ensure this returns a Map
+      } else {
+        throw Exception('Failed to authenticate');
+      }
+    } catch (error) {
+      print('API error: $error');
+      return {}; // Return an empty map on error
+    }
+  }
+  Future<void> registerUser(String username, String email, String password, String confirmPassword) async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://46.101.198.244:4040/api/students/register'), // Replace with your API URL
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'username': username,
+          'email': email,
+          'password': password,
+          'confirmPassword': confirmPassword,
+        }),
+      );
+
+      if (response.statusCode != 200) {
+        logger.e('Failed to register user: ${response.statusCode}');
+        logger.e('Response body: ${response.body}');
+        throw Exception('Failed to register user');
+      }
+    } catch (error) {
+      logger.e('Error registering user: $error');
+      throw Exception('Failed to register user');
+    }
+  }
 }
+
 
 class Payment {
   final int paymentId;

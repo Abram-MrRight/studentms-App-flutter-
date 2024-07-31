@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:studentms_app/api/api_repository.dart';
-import 'package:studentms_app/drawer/Drawer.dart';
 import 'package:studentms_app/pages/Home/home_controller.dart';
 import 'package:studentms_app/pages/studentsList/students_screen.dart';
 import '../../Routes/app_pages.dart';
+import '../Login/login_controller.dart';
+import '../drawer/Drawer.dart';
 
 class HomeView extends StatelessWidget {
   final HomeController controller = Get.put(HomeController(apiRepository: Get.find<ApiRepository>()));
+  final LoginController loginController = Get.find<LoginController>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,40 +33,42 @@ class HomeView extends StatelessWidget {
           ),
         ],
       ),
-      drawer: const BuildDrawer(),
-      body: Obx(() {
-        if (controller.studentsResponse.value == null) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 60), // Add space at the top
-              _buildCard(
-                title: 'Expected Amount',
-                value: '${controller.totalExpectedFees}',
-              ),
-              const SizedBox(height: 10),
-              _buildCard(
-                title: 'Total Collected',
-                value: '${controller.totalPayments}',
-              ),
-              const SizedBox(height: 10),
-              _buildCard(
-                title: 'Outstanding Balances',
-                value: '${controller.totalOutstandingBalances}',
-              ),
-              const SizedBox(height: 10),
-              _buildCard(
-                title: 'Percentage Collected',
-                value: controller.percentageCollected,
-              ),
-              const SizedBox(height: 50),
-            ],
-          ),
-        );
-      }),
+      drawer:  BuildDrawer(),
+      body: SingleChildScrollView(
+        child: Obx(() {
+          if (controller.studentsResponse.value == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 60), // Add space at the top
+                _buildCard(
+                  title: 'Expected Amount',
+                  value: '${controller.totalExpectedFees}',
+                ),
+                const SizedBox(height: 10),
+                _buildCard(
+                  title: 'Total Collected',
+                  value: '${controller.totalPayments}',
+                ),
+                const SizedBox(height: 10),
+                _buildCard(
+                  title: 'Outstanding Balances',
+                  value: '${controller.totalOutstandingBalances}',
+                ),
+                const SizedBox(height: 10),
+                _buildCard(
+                  title: 'Percentage Collected',
+                  value: controller.percentageCollected,
+                ),
+                const SizedBox(height: 50),
+              ],
+            ),
+          );
+        }),
+      ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.black,
